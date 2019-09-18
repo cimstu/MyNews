@@ -12,6 +12,7 @@ type Seacher struct {
 	KeyWords []string
 }
 
+
 type Article struct {
 	Title string
 	Url string
