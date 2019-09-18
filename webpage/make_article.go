@@ -6,21 +6,17 @@ import (
 	"strings"
 )
 
-var NewHtmlContents string
 
-func MakePage(articles []bug.Article, top int) {
+func MakePage(articles []bug.Article) string{
 	var htmlElements string
-	for i, article := range articles {
-		if i >= top {
-			break
-		}
+	for _, article := range articles {
 
 		if strings.Index(article.Url, "https") != 0 && strings.Index(article.Url, "http") != 0 {
-			htmlElements += fmt.Sprintf("<p><a href=\"%s\">%s</a></p>", "http:"+ article.Url, article.Title)
+			htmlElements += fmt.Sprintf("<p><a href=\"%s\" target=\"_blank\">%s</a></p>", "http:"+article.Url, article.Title)
 		} else {
-			htmlElements += fmt.Sprintf("<p><a href=\"%s\">%s</a></p>", article.Url, article.Title)
+			htmlElements += fmt.Sprintf("<p><a href=\"%s\" target=\"_blank\">%s</a></p>", article.Url, article.Title)
 		}
 	}
 
-	NewHtmlContents = fmt.Sprintf("<html><body>%s</body></html>", htmlElements)
+	return fmt.Sprintf("<html><body>%s</body></html>", htmlElements)
 }

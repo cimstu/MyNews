@@ -8,17 +8,17 @@ import (
 )
 
 type Seacher struct {
-	NetSet string
+	NetSet   string
 	KeyWords []string
 }
 
-
 type Article struct {
 	Title string
-	Url string
+	Url   string
+	T	  string
 }
 
-func (s* Seacher)Run()([]Article) {
+func (s *Seacher) Run() []Article {
 	resp, _ := http.Get(s.NetSet)
 
 	defer resp.Body.Close()
@@ -35,20 +35,20 @@ func (s* Seacher)Run()([]Article) {
 	}
 
 	var articles []Article
-	doc.Find(".articleTitle").Each(func(i int, sel* goquery.Selection) {
-		t := sel.Find("a").Text()
-		u, _ := sel.Find("[href]").Attr("href")
-		articles = append(articles, Article{t, u})
-	})
 
-	var result []Article
-	for _, article := range articles {
+	doc.Find(".articleTitle").Each(func(i int, sel *goquery.Selection) {
+		title := sel.Find("a").Text()
 		for _, key := range s.KeyWords {
-			if strings.Index(article.Title, key) >= 0 {
-				result = append(result, article)
+			if strings.Index(title, key) >= 0 {
+				u, _ := sel.Find("[href]").Attr("href")
+				date := sel.Parent().Find(".postTime").Text()
+
+				article := Article{title, u, date}
+
+				articles = append(articles, article)
 			}
 		}
-	}
+	})
 
-	return result
+	return articles
 }
